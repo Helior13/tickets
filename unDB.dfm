@@ -433,7 +433,7 @@ object DM: TDM
     SQL.Strings = (
       'INSERT INTO tblLog (user_id, transaction_id, date_time_log)'
       'VALUES (:user_id, @@identity, :date)')
-    Left = 432
+    Left = 512
     Top = 104
     ParamData = <
       item
@@ -487,5 +487,27 @@ object DM: TDM
       'SELECT * FROM tblSettings;')
     Left = 72
     Top = 424
+  end
+  object FDFixCounter: TFDQuery
+    Connection = FDConnection
+    SQL.Strings = (
+      'UPDATE tblCounter '
+      'SET "counter" = :counter'
+      'WHERE (auto_id = :auto_id) AND counter_date = :date')
+    Left = 432
+    Top = 104
+    ParamData = <
+      item
+        Name = 'COUNTER'
+        ParamType = ptInput
+      end
+      item
+        Name = 'auto_id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'DATE'
+        ParamType = ptInput
+      end>
   end
 end

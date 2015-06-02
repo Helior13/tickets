@@ -197,13 +197,14 @@ object fmMain: TfmMain
     Width = 588
     Height = 462
     Anchors = [akLeft, akTop, akRight, akBottom]
-    PageIndex = 5
     TabOrder = 0
+    OnClick = nbTabsClick
     object TPage
       Left = 0
       Top = 0
       Caption = 'pOperator'
       object sgOperator: TStringGrid
+        Tag = 4
         AlignWithMargins = True
         Left = 3
         Top = 3
@@ -211,7 +212,7 @@ object fmMain: TfmMain
         Height = 459
         Margins.Bottom = 0
         Align = alClient
-        ColCount = 1
+        ColCount = 4
         Ctl3D = True
         FixedCols = 0
         RowCount = 2
@@ -224,7 +225,10 @@ object fmMain: TfmMain
         OnExit = sgOperatorExit
         OnKeyPress = sgOperatorKeyPress
         ColWidths = (
-          30)
+          30
+          200
+          60
+          350)
       end
     end
     object TPage
@@ -232,6 +236,7 @@ object fmMain: TfmMain
       Top = 0
       Caption = 'pAdmin'
       object sgAdmin: TStringGrid
+        Tag = 9
         AlignWithMargins = True
         Left = 3
         Top = 27
@@ -239,7 +244,7 @@ object fmMain: TfmMain
         Height = 435
         Margins.Bottom = 0
         Align = alClient
-        ColCount = 1
+        ColCount = 9
         FixedCols = 0
         RowCount = 2
         Font.Charset = DEFAULT_CHARSET
@@ -254,7 +259,15 @@ object fmMain: TfmMain
         OnDrawCell = sgAdminDrawCell
         OnExit = sgAdminExit
         ColWidths = (
-          30)
+          30
+          200
+          106
+          120
+          105
+          100
+          110
+          110
+          60)
       end
       object tbAdmin: TToolBar
         AlignWithMargins = True
@@ -371,6 +384,7 @@ object fmMain: TfmMain
       Top = 0
       Caption = 'pAutomats'
       object sgAutomats: TStringGrid
+        Tag = 5
         AlignWithMargins = True
         Left = 3
         Top = 27
@@ -378,7 +392,6 @@ object fmMain: TfmMain
         Height = 435
         Margins.Bottom = 0
         Align = alClient
-        ColCount = 1
         FixedCols = 0
         RowCount = 2
         Font.Charset = DEFAULT_CHARSET
@@ -392,7 +405,11 @@ object fmMain: TfmMain
         OnDblClick = btnEditAutoClick
         OnDrawCell = sgDrawCell
         ColWidths = (
-          30)
+          30
+          200
+          60
+          70
+          300)
         RowHeights = (
           24
           24)
@@ -655,6 +672,7 @@ object fmMain: TfmMain
         end
       end
       object sgUsers: TStringGrid
+        Tag = 4
         AlignWithMargins = True
         Left = 3
         Top = 27
@@ -662,7 +680,7 @@ object fmMain: TfmMain
         Height = 435
         Margins.Bottom = 0
         Align = alClient
-        ColCount = 1
+        ColCount = 4
         FixedCols = 0
         RowCount = 2
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goRowSelect]
@@ -671,7 +689,10 @@ object fmMain: TfmMain
         OnDrawCell = sgDrawCell
         OnExit = sgUsersExit
         ColWidths = (
-          30)
+          30
+          200
+          105
+          100)
       end
     end
     object TPage
@@ -679,6 +700,7 @@ object fmMain: TfmMain
       Top = 0
       Caption = 'pLog'
       object sgLog: TStringGrid
+        Tag = 6
         AlignWithMargins = True
         Left = 3
         Top = 3
@@ -686,7 +708,7 @@ object fmMain: TfmMain
         Height = 459
         Margins.Bottom = 0
         Align = alClient
-        ColCount = 1
+        ColCount = 6
         FixedCols = 0
         RowCount = 2
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing]
@@ -694,7 +716,12 @@ object fmMain: TfmMain
         OnDrawCell = sgDrawCell
         OnExit = sgLogExit
         ColWidths = (
-          200)
+          200
+          200
+          60
+          90
+          139
+          300)
       end
     end
     object TPage
@@ -881,6 +908,10 @@ object fmMain: TfmMain
     object NPlug: TMenuItem
       Caption = #1055#1088#1080#1093#1086#1076' '#1073#1080#1083#1077#1090#1086#1074
       OnClick = sgOperatorDblClick
+    end
+    object NFixCounter: TMenuItem
+      Caption = #1048#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1095#1077#1090#1095#1080#1082#1072
+      OnClick = NFixCounterClick
     end
   end
   object BindingsL: TBindingsList

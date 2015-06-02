@@ -78,6 +78,7 @@ type
     OpenLogoDlg: TOpenPictureDialog;
     imgLogo: TImage;
     btnPrint: TSpeedButton;
+    NFixCounter: TMenuItem;
     procedure sgOperatorDblClick(Sender: TObject);
     procedure sgOperatorKeyPress(Sender: TObject; var Key: Char);
     procedure NCounterClick(Sender: TObject);
@@ -112,6 +113,8 @@ type
     procedure btnPrintClick(Sender: TObject);
     procedure sgDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
+    procedure nbTabsClick(Sender: TObject);
+    procedure NFixCounterClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -199,6 +202,7 @@ if (sgOperator.Cells[2,1]<>'') and (edQuantity.Text<>'') then tickets_lack := sg
 cbEmailClick(Sender);
 if User.level < 2  then begin     //   Если не админ
   pnButtons.Hide;
+  NFixCounter.Visible := False;
   dtDateBegin.Enabled := False;
   dtDateEnd.Enabled   := False;
   cbMonth.Enabled     := False;
@@ -237,6 +241,11 @@ end;
 
 
 
+
+procedure TfmMain.nbTabsClick(Sender: TObject);
+begin
+
+end;
 
 //Процедура обработки бокового преключателя
 procedure TfmMain.pnChooseTab(Sender: TObject);
@@ -316,10 +325,10 @@ begin
 // Кодируем и отправляем
     Msg.EncodeMessage;
     smtpsend.SendToRaw(From, pTo, Host, Msg.Lines, login, password, port);
- finally
+  finally
    Msg.Free;
    StringList.Free;
- end;
+  end;
 end;
 
 begin
@@ -354,18 +363,40 @@ end;
 procedure TfmMain.NCounterClick(Sender: TObject);
 begin
 if sgOperator.Cells[0,sgOperator.Row] <> '1' then
-With fmPlug do begin
+With fmPlug do
+  begin
   lbAutoName.Caption := sgOperator.Cells[1,sgOperator.Row];
   edPlug.Text := '';
   fmType := ftCounter;
   if  (ShowModal = mrOk) and (edPlug.Text <> '') then
     if not DM.ChangeCounter(sgOperator.Cells[0,sgOperator.Row].ToInteger,
                             StrToInt(edPlug.Text),
-                            dtDate.Date,
+                            dtDate.Date,  // transaction date
                             mmComment.Text,
                             User.id) then
                                 MessageBox(0,
                                            Pchar('Нельзя редактировать показания счетчика ранее последнего обновления!'),
+                                           'Внимание',
+                                           MB_OK or MB_ICONWARNING);
+  end;
+end;
+
+procedure TfmMain.NFixCounterClick(Sender: TObject);
+begin
+if sgOperator.Cells[0,sgOperator.Row] <> '1' then
+With fmPlug do
+  begin
+  lbAutoName.Caption := sgOperator.Cells[1,sgOperator.Row];
+  edPlug.Text := '';
+  fmType := ftFixCounter;
+  if  (ShowModal = mrOk) and (edPlug.Text <> '') then
+    if not DM.FixCounter(sgOperator.Cells[0,sgOperator.Row].ToInteger,
+                            StrToInt(edPlug.Text),
+                            dtDate.Date,  // transaction date
+                            mmComment.Text,
+                            User.id) then
+                                MessageBox(0,
+                                           Pchar('Можно исправить только последние показазния счетчика!'),
                                            'Внимание',
                                            MB_OK or MB_ICONWARNING);
   end;
@@ -548,7 +579,8 @@ end;
 // процедура добавления выручки
 procedure TfmMain.sgAdminDblClick(Sender: TObject);
 begin
-With fmPlug do begin
+With fmPlug do
+  begin
   fmType := ftTake;
   lbAutoName.Caption := sgAdmin.Cells[1,sgAdmin.Row];
   edPlug.Text := '';

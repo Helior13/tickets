@@ -13,6 +13,8 @@ const
   ftCounter = 1;
   //тип внесение выручки в базу
   ftTake = 2;
+  //тип исправление счетчика
+  ftFixCounter = 3;
 
 type
   TfmPlug = class(TForm)
@@ -46,21 +48,27 @@ begin
 dtDate.Date := Date;
 mmComment.Text := '';
 case fmType of
-  0:begin
-    Caption := 'Приход';
-    edPlug.EditLabel.Caption := 'Приход';
-    Color := clBtnFace;
-    end;
-  1:begin
-    Caption := 'Показания счетчика';
-    edPlug.EditLabel.Caption := 'Счетчик';
-    Color := clBtnShadow;
-    end;
-  2:begin
-    Caption := 'Выручка';
-    edPlug.EditLabel.Caption := 'Выручка';
-    Color := clBtnFace;
-    end;
+      ftPlug: begin
+              Caption := 'Приход';
+              edPlug.EditLabel.Caption := 'Приход';
+              Color := clBtnFace;
+              end;
+   ftCounter :begin
+              Caption := 'Показания счетчика';
+              edPlug.EditLabel.Caption := 'Счетчик';
+              Color := clBtnShadow;
+              end;
+      ftTake :begin
+              Caption := 'Выручка';
+              edPlug.EditLabel.Caption := 'Выручка';
+              Color := clBtnFace;
+              end;
+ftFixCounter: begin
+              Caption := 'Исправление показаний счетчика';
+              edPlug.EditLabel.Caption := 'Счетчик';
+              Color := clBtnShadow;
+              mmComment.Lines.Add('Исправление показаний счетчика на ' + DateToStr(dtDate.Date));
+              end;
   end;
 end;
 

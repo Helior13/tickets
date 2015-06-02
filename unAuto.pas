@@ -34,18 +34,22 @@ implementation
 
 procedure TfmAuto.FormShow(Sender: TObject);
 begin
-if fmType_add then begin
+if fmType_add then
+  begin
+  dtDate.DateTime := Date;
   Caption := 'Создание нового автомата';
   edCounter.Enabled := True;
   dtDate.Enabled := True;
   edAuto_name.Text := '';
   edCounter.Text := '';
   mmComment.Clear;
-  end else begin
-    Caption := 'Редактирование автомата';
-    edCounter.Enabled := False;
-    dtDate.Enabled := False;
-    end;
+  end
+    else
+      begin
+      Caption := 'Редактирование автомата';
+      edCounter.Enabled := False;
+      dtDate.Enabled := False;
+      end;
 end;
 
 end.

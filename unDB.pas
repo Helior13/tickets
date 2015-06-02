@@ -35,10 +35,12 @@ type
     FDUpdateLog: TFDQuery;
     FDLogQuery: TFDQuery;
     FDSettings: TFDQuery;
+    FDFixCounter: TFDQuery;
     function Connect: boolean;
     procedure DataModuleCreate(Sender: TObject);
     procedure Plug(auto_id, tickets: integer; transaction_date: TDate; comment: AnsiString; user_id: integer; fromStorage: boolean = True);
     function ChangeCounter(auto_id, tickets: integer; transaction_date: TDate; comment: AnsiString; user_id: integer): boolean;
+    function FixCounter(auto_id: Integer; tickets: Integer; transaction_date: TDate; comment: AnsiString; user_id: integer): boolean;
     procedure FDOperatorQueryBeforeOpen(DataSet: TDataSet);
     function GetBeginDate: TDate;
     procedure SetBeginDate(current_date: TDate);
@@ -230,7 +232,7 @@ end;
 
 // Процедура внесения нового значения счетчика
 function TDM.ChangeCounter(auto_id: Integer; tickets: Integer; transaction_date: TDate; comment: AnsiString; user_id: integer): boolean;
-Var Calc_tickets: integer; // вычисленное количество выданны билетов
+Var Calc_tickets: integer; // вычисленное количество выданных билетов
 begin
   Result := True;
 //рассчитываем количество выданных билетов
@@ -241,7 +243,7 @@ begin
 
   Calc_tickets := tickets - FDCounterSelect.Fields[0].AsInteger;
 
-  if transaction_date >= FDCounterSelect.Fields[1].AsDateTime then begin
+  if transaction_date > FDCounterSelect.Fields[1].AsDateTime then begin
         {
 
 // заносим данные в регистр оборотов
@@ -257,6 +259,30 @@ begin
   FDCounterQuery.ParamByName('date').AsDate       := transaction_date;
   FDCounterQuery.ParamByName('counter').AsInteger := tickets;
   FDCounterQuery.Execute;
+
+  Plug(auto_id, -Calc_tickets, transaction_date, comment, user_id, False);
+  end else Result := False; // Сигнализируем об ошибке
+end;
+
+function TDM.FixCounter(auto_id: Integer; tickets: Integer; transaction_date: TDate; comment: AnsiString; user_id: integer): boolean;
+Var Calc_tickets: integer; // вычисленное количество выданных билетов
+begin
+  Result := True;
+//рассчитываем количество выданных билетов
+  FDCounterSelect.ParamByName('auto_id').AsInteger  := auto_id;
+  //FDCounterSelect.ParamByName('date').AsDate        := transaction_date;
+  FDCounterSelect.Close;
+  FDCounterSelect.Open;
+
+  Calc_tickets := tickets - FDCounterSelect.Fields[0].AsInteger;
+
+  if transaction_date = FDCounterSelect.Fields[1].AsDateTime then begin
+
+// обновляем показания счетчика
+  FDFixCounter.ParamByName('auto_id').AsInteger := auto_id;
+  FDFixCounter.ParamByName('date').AsDate       := transaction_date;
+  FDFixCounter.ParamByName('counter').AsInteger := tickets;
+  FDFixCounter.Execute;
 
   Plug(auto_id, -Calc_tickets, transaction_date, comment, user_id, False);
   end else Result := False; // Сигнализируем об ошибке
